@@ -16,15 +16,15 @@ method definitions:
 
   method  isHasDepthLimit(input:Body body) //
       begin:
-              units = body.getUnits()
-              Traverse  units
+              units = body.getUnits();
+              Traverse  units:
                 if unit instance IfStmt:
-                    if isDepthCondition(unit) 
-                      value = call  getDepthConditionValue(unit)
-                      if isAdd(value) and  isClassAttributeOrParameterRef(value):
+                    if isDepthCondition(unit):
+                      value = call  getDepthConditionValue(unit);
+                      if isAdd(value) &&  isClassAttributeOrParameterRef(value):
                   
-                          return  true //depth limit
-                      return  false //not depth limit
+                          return  true ;//depth limit
+                      return  false; //not depth limit
       end 
   
   
@@ -34,17 +34,17 @@ method definitions:
      
   method methodAnalyser(input：SootMethod sootMethod, Stack sootMethodStack) //Analyze method for unlimited recursion
       begin：
-          body = sootMethod.retrieveActiveBody()
-          units = body.getUnits()
-          Traverse  units
+          body = sootMethod.retrieveActiveBody();
+          units = body.getUnits();
+          Traverse  units:
               if unit instanceof InvokeStmt:
-                  method = unit.getmethod() // get the sootmethod 
-                  if isInExcetion(body,method)
+                  method = unit.getmethod(); // get the sootmethod 
+                  if isInExcetion(body,method):
                       continue
                   if sootMethodStack contains invokeMethod :
                           if !isHasDepthLimit(method.retrieveActiveBody()):
                                  sootMethodStack.push(method);
-                                  return 
+                                  return ;
                   if !method.isAbstract():
                           sootMethodStack.push(method);
                           methodAnalyser(method,sootMethodStack);
@@ -52,13 +52,13 @@ method definitions:
               if unit instanceof AssignStmt:
                   boxes = unit.getUseBoxes();
                   if boxes.get(0).getValue() instanceof InvokeExpr:
-                            method = unit.getMethod
-                            if isInExcetion(body,method)
+                            method = unit.getMethod;
+                            if isInExcetion(body,method):
                                   continue
                             if sootMethodStack contains invokeMethod :
                                if !isHasDepthLimit(method.retrieveActiveBody()):
                                   sootMethodStack.push(method);
-                                  recordMaxStack(sootMethodStack,sootMethodStacks)
+                                  recordMaxStack(sootMethodStack,sootMethodStacks);
                                   return 
                             if !method.isAbstract():
                                  sootMethodStack.push(method);
